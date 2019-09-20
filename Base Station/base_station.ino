@@ -382,12 +382,13 @@ void prgrm(int menu) {
 
   }
   else if (menu == 6){
+    while (digitalRead(buttonMain) == LOW){delay(1);}
     lcd.clear();
     lcd.setCursor(0,0);
     lcd.print("Hold Pair On");
     lcd.setCursor(0,1);
     lcd.print("Button:");
-    for(int x = 0; x <= buttons; x++){
+    for(int x = 2; x <= buttons; x++){
       lcd.setCursor(8,1);
       lcd.print("        ");
       lcd.setCursor(8,1);
@@ -397,8 +398,16 @@ void prgrm(int menu) {
       while (digitalRead(buttonMain) == LOW){delay(1);}
     }
     lcd.clear();
-    lcd.setCursor(0,0);
-    lcd.print("Pairing complete!");
+    if (buttons > 1){
+      lcd.setCursor(0,0);
+      lcd.print("Pairing complete!");
+    }
+    else {
+      lcd.setCursor(3,0);
+      lcd.print("No buttons");
+      lcd.setCursor(4,1);
+      lcd.print("to pair!");
+    }
     while(digitalRead(buttonMain) != LOW){delay(1);}
       
   }
