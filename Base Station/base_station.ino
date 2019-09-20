@@ -404,9 +404,9 @@ void prgrm(int menu) {
     }
     else {
       lcd.setCursor(3,0);
-      lcd.print("No buttons");
+      lcd.print("No Buttons");
       lcd.setCursor(4,1);
-      lcd.print("to pair!");
+      lcd.print("To Pair!");
     }
     while(digitalRead(buttonMain) != LOW){delay(1);}
       

@@ -2,5 +2,5 @@
     "programmer": "AVRISP mkII",
     "board": "arduino:avr:uno",
     "port": "COM3",
-    "sketch": "base_station.ino"
+    "sketch": "Base Station\\base_station.ino"
 }
