@@ -399,7 +399,8 @@ void prgrm(int menu) {
       lcd.print(x);
       while (digitalRead(buttonMain) != LOW){}
       // send paircode paircode[x] to transmitters  
-      while (digitalRead(buttonMain) == LOW){delay(1);}
+      while (digitalRead(buttonMain) == LOW){delay(5);}
+      delay(300);
     }
     lcd.clear();
     if (buttons > 1){
