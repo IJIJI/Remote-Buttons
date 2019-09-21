@@ -13,6 +13,7 @@ const char modes[10][11] = {"Timed", "Re-end", "Quiz", "Button Set","Time Set", 
 #define buttonUp 2
 #define buttonDown 3
 #define buttonMain 4
+#define ledMain 9
 
 int buttons = 1; // default terminals + base stations
 
@@ -53,10 +54,12 @@ void setup()
   pinMode(buttonUp, INPUT_PULLUP); 
   pinMode(buttonDown, INPUT_PULLUP);
   pinMode(buttonMain, INPUT_PULLUP); 
+  pinMode(ledMain, OUTPUT);
 
   // Print an initialization message to the LCD.
   lcd.init();  // initialize the lcd. 
   lcd.backlight();
+  digitalWrite(ledMain, HIGH);
   bool DispOn = true;
   lastActTime = secTime();
   lcd.setCursor(2,0);
@@ -77,6 +80,7 @@ void setup()
     delay(70); 
   }  
   lcd.clear(); //Clear the LCD
+  digitalWrite(ledMain, LOW);
 }
 
 
@@ -350,7 +354,7 @@ void prgrm(int menu) {
     lcd.print("Time:");
     while(cTimeEdit <= 2){
 
-      if (timeDiv(cTimeEdit) + tOffset[cTimeEdit] != cSetTime[cTimeEdit]){ //check if the current time is different from the supposed time
+      if (timeDiv(cTimeEdit) + tOffset[cTimeEdit] != cSetTime[cTimeEdit] || timeDiv(cTimeEdit) + tOffset[cTimeEdit] == 0){ //check if the current time is different from the supposed time
         cSetTime[cTimeEdit] = timeDiv(cTimeEdit) + tOffset[cTimeEdit];
         lcd.setCursor(timeLocs[cTimeEdit],1);
         lcd.print("   ");
