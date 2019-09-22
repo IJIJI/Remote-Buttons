@@ -4,14 +4,20 @@
 #include <LiquidCrystal_I2C.h>
 #include "RTClib.h"
 
+/*
+System with display on uses about 56ma.
+
+System without display uses about 41ma.
+*/
+
 LiquidCrystal_I2C lcd(0x27,16,2);  // set the LCD address to 0x27 for a 16 chars and 2 line display
 RTC_DS3231 rtc;
 
 const char modes[10][11] = {"Timed", "Re-end", "Quiz", "Button Set","Time Set", "Pairing", "7", "8", "9", "10"};
 
 
-#define buttonUp 2
-#define buttonDown 3
+#define buttonUp 3
+#define buttonDown 2
 #define buttonMain 4
 #define ledMain 9
 
@@ -88,8 +94,9 @@ void loop()
 {
   DateTime now = rtc.now(); //define rtc.now
   if (digitalRead(buttonMain) == LOW && DispOn == true){
+    bPress(false);
     prgrm(Menu);
-    while(digitalRead(buttonMain) == LOW){delay(1);}
+    
   }
   if (digitalRead(buttonUp) == LOW && DispOn == true){ //check if the up button is pressed
     Menu = Menu + 1;
@@ -192,6 +199,15 @@ void lcdDigitPrint(int inVar, int digits){
     lcd.print(inVar);
   }
 }
+void bPress(int sCheck){
+  if (sCheck == true){
+    while(digitalRead(buttonMain) == LOW){delay(1);}
+    while(digitalRead(buttonMain) != LOW){delay(1);}
+  }
+  digitalWrite(ledMain, HIGH);
+  while (digitalRead(buttonMain) == LOW){delay(1);}
+  digitalWrite(ledMain, LOW);
+}
 
 int secTime() {
   DateTime now = rtc.now();
@@ -254,15 +270,13 @@ void prgrm(int menu) {
 
     bool buttonMainActive = 0;
 
-    while(digitalRead(buttonMain) == LOW){delay(1);}
     lcd.clear();
     lcd.setCursor(0,0);
     lcd.print("Time:");
-    while(digitalRead(buttonMain) != LOW){
-      lcd.setCursor(1,1);
-      lcd.print("Press to start");
-      
-    }
+    lcd.setCursor(1,1);
+    lcd.print("Press to start");
+    while(digitalRead(buttonMain) != LOW){delay(1);}
+    digitalWrite(ledMain, HIGH);
     while(digitalRead(buttonMain) == LOW){delay(1);}
     lcd.clear();
     lcd.setCursor(0,0);
@@ -278,6 +292,7 @@ void prgrm(int menu) {
       lcd.print(buttons-pedButtons);
       if (digitalRead(buttonMain) == LOW){
         actived[0] = 1;
+        digitalWrite(ledMain, LOW);
       }
       for (int x = 1; x <= buttons; x++){
         //check if input car = trigCode[x - 1]
@@ -291,9 +306,8 @@ void prgrm(int menu) {
     }
     lcd.setCursor(6,1);
     lcd.print("Completed!");
-    while(digitalRead(buttonMain) == LOW){delay(1);}
-    while(digitalRead(buttonMain) != LOW){delay(1);}
-    while(digitalRead(buttonMain) == LOW){delay(1);}
+    bPress(true);
+    
     
 
 
@@ -303,21 +317,18 @@ void prgrm(int menu) {
     lcd.clear();
     lcd.setCursor(6,0);
     lcd.print("Quiz");
-    while (digitalRead(buttonMain) == LOW){delay(1);}
-    while (digitalRead(buttonMain) != LOW){
-      lcd.setCursor(1,1);
-      lcd.print("Press To Start");
-    }
+    lcd.setCursor(1,1);
+    lcd.print("Press To Start");
+    bPress(true);
 
   }
   else if (menu == 4){
 
     int cButtons = 99;
-
-    while(digitalRead(buttonMain) == LOW){delay(1);}
     lcd.clear();
     lcd.setCursor(0,0);
     lcd.print("Stations:");
+    while(digitalRead(buttonMain) == LOW){delay(1);}
     while(digitalRead(buttonMain) != LOW){
       if (digitalRead(buttonUp) == LOW && buttons < buttonMax){
         buttons = buttons + 1;
@@ -333,13 +344,13 @@ void prgrm(int menu) {
         lcd.setCursor(10, 0);
         lcd.print(buttons);
       }
-
+      
 
     }
     EEPROM.write(adress1, buttons);
     dispUpdate = true;
     lastActTime = secTime();
-
+    bPress(false);
   }
   else if(menu == 5){
 
@@ -366,7 +377,7 @@ void prgrm(int menu) {
       }
       if (digitalRead(buttonMain) == LOW){
         cTimeEdit = cTimeEdit + 1;
-        while(digitalRead(buttonMain) == LOW){delay(1);}
+        bPress(false);
       }
       if (digitalRead(buttonUp) == LOW && timeDiv(cTimeEdit) + tOffset[cTimeEdit] < tMaxLimits[cTimeEdit]){
         tOffset[cTimeEdit] = tOffset[cTimeEdit] + 1;
@@ -397,10 +408,9 @@ void prgrm(int menu) {
       lcd.print("        ");
       lcd.setCursor(8,1);
       lcd.print(x);
-      while (digitalRead(buttonMain) != LOW){}
+      bPress(true);
       // send paircode paircode[x] to transmitters  
-      while (digitalRead(buttonMain) == LOW){delay(5);}
-      delay(300);
+      // delay(300);
     }
     lcd.clear();
     if (buttons > 1){
@@ -413,7 +423,7 @@ void prgrm(int menu) {
       lcd.setCursor(4,1);
       lcd.print("To Pair!");
     }
-    while(digitalRead(buttonMain) != LOW){delay(1);}
+    delay(1000);
       
   }
   lcd.clear();
