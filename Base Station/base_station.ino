@@ -16,10 +16,10 @@ RTC_DS3231 rtc;
 const char modes[10][11] = {"Timed", "Re-end", "Quiz", "Button Set","Time Set", "Pairing", "7", "8", "9", "10"};
 
 
-#define buttonUp 3
-#define buttonDown 2
+#define buttonUp 2
+#define buttonDown 3
 #define buttonMain 4
-#define ledMain 9
+#define ledMain 5
 
 int buttons = 1; // default terminals + base stations
 
@@ -31,9 +31,11 @@ int buttons = 1; // default terminals + base stations
 
 #define screenTimeOut 1
 
-#define adress1 6 // Here the button amount is stored
+#define setUpAdress 6 // this is how the firmware knows if it has been set up for the first time
+#define adress1 7 // Here the button amount is stored
 
-const int EEPid[6] {99, 240, 129, 92, 7, 12};
+const int EEPid[6] {99, 240, 129, 92, 7, 5};
+const int setUpId = 98;
 const int PairCode[buttonMax] {101, 102, 103, 104, 105, 106, 107, 108, 109, 110};
 const int trigCode[buttonMax] {151, 152, 153, 154, 155, 156, 157, 158, 159, 160};
 
@@ -44,6 +46,9 @@ int cMinute = 99;
 int cSecond = 99;
 bool dispUpdate = false;
 
+bool firstStart = false;
+
+
 #ifdef screenTimeOut
 bool DispOn;
 int lastActTime;
@@ -53,9 +58,6 @@ int x;
 
 void setup()
 {
-
-
-  
   //set the pinmodes.
   pinMode(buttonUp, INPUT_PULLUP); 
   pinMode(buttonDown, INPUT_PULLUP);
@@ -73,7 +75,7 @@ void setup()
 
   if (EEPROMcheck() == false){
     lcd.print("*");
-    
+    firstStart = true;
   }
 
   lcd.setCursor(0,1);
@@ -87,6 +89,13 @@ void setup()
   }  
   lcd.clear(); //Clear the LCD
   digitalWrite(ledMain, LOW);
+  if (firstStart == true || EEPROM.read(setUpAdress) != setUpId){
+    prgrm(4);
+    if (buttons > 1){
+      prgrm(6);
+    }
+    EEPROM.write(setUpAdress, setUpId);
+  }
 }
 
 
@@ -96,7 +105,6 @@ void loop()
   if (digitalRead(buttonMain) == LOW && DispOn == true){
     bPress(false);
     prgrm(Menu);
-    
   }
   if (digitalRead(buttonUp) == LOW && DispOn == true){ //check if the up button is pressed
     Menu = Menu + 1;
@@ -259,13 +267,13 @@ int EEPROMcheck(){
 void prgrm(int menu) {
   DateTime now = rtc.now();
   
-  if (menu == 1)
+  if (menu == 1 || menu == 2)
   {
     int pedButtons = 0;
-    int tStart;
     int bMenu = 3;
     int cBMenu = 99;
-    int time;
+    float tStart = 0;
+    float time = 0;
     int actived[buttonMax] = {0, 0, 0, 0, 0, 0, 0, 0, 0, 0}; 
 
     bool buttonMainActive = 0;
@@ -275,22 +283,23 @@ void prgrm(int menu) {
     lcd.print("Time:");
     lcd.setCursor(1,1);
     lcd.print("Press to start");
-    while(digitalRead(buttonMain) != LOW){delay(1);}
+    while(digitalRead(buttonMain) != LOW){delay(5);}
     digitalWrite(ledMain, HIGH);
-    while(digitalRead(buttonMain) == LOW){delay(1);}
+    while(digitalRead(buttonMain) == LOW){delay(5);}
     lcd.clear();
     lcd.setCursor(0,0);
     lcd.print("Time:");
     lcd.setCursor(0,1);
     lcd.print("Left:");
-    tStart = secTime();
+    tStart = millis();
     while(pedButtons < buttons){
-      time = secTime() - tStart;
+      time = (millis() - tStart) / 1000;
       lcd.setCursor(6, 0);
-      lcd.print(time);
+      lcd.print(time, 1);
+      lcd.print("0");
       lcd.setCursor(6,1);
       lcd.print(buttons-pedButtons);
-      if (digitalRead(buttonMain) == LOW){
+      if (digitalRead(buttonMain) == LOW || actived[0] == 1){
         actived[0] = 1;
         digitalWrite(ledMain, LOW);
       }
@@ -301,9 +310,12 @@ void prgrm(int menu) {
       for (int x = 0; x <= buttons; x++){
         pedButtons = pedButtons + actived[x];
       }
+
       
 
     }
+    lcd.setCursor(6, 0);
+    lcd.print(time, 2);
     lcd.setCursor(6,1);
     lcd.print("Completed!");
     bPress(true);
@@ -341,6 +353,8 @@ void prgrm(int menu) {
 
       if (cButtons != buttons){
         cButtons = buttons;
+        lcd.setCursor(10, 0);
+        lcd.print("       ");
         lcd.setCursor(10, 0);
         lcd.print(buttons);
       }
