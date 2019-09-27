@@ -34,7 +34,7 @@ int buttons = 1; // default terminals + base stations
 #define setUpAdress 6 // this is how the firmware knows if it has been set up for the first time
 #define adress1 7 // Here the button amount is stored
 
-const int EEPid[6] {99, 240, 129, 92, 7, 5};
+const int EEPid[6] {99, 240, 129, 92, 7, 9};
 const int setUpId = 98;
 const int PairCode[buttonMax] {101, 102, 103, 104, 105, 106, 107, 108, 109, 110};
 const int trigCode[buttonMax] {151, 152, 153, 154, 155, 156, 157, 158, 159, 160};
@@ -90,6 +90,7 @@ void setup()
   lcd.clear(); //Clear the LCD
   digitalWrite(ledMain, LOW);
   if (firstStart == true || EEPROM.read(setUpAdress) != setUpId){
+    prgrm(5);
     prgrm(4);
     if (buttons > 1){
       prgrm(6);
@@ -217,6 +218,26 @@ void bPress(int sCheck){
   digitalWrite(ledMain, LOW);
 }
 
+int getMil(float sec){
+  int sec2 = sec * 100;
+  sec = sec2 % 100;
+  return abs(sec);
+}
+int getSec(float sec){
+  int sec2 = sec;
+  sec = sec2 % 60;
+  return sec;
+
+}
+int getMin(float sec){
+  int sec2 = sec;
+  int mins;
+  mins = round((sec2 / 60));
+  // if (sec2 % 60 >= 0.5 && mins > 1){
+  //   mins = mins - 1;
+  // }
+  return mins;
+}
 int secTime() {
   DateTime now = rtc.now();
   int secTime;
@@ -295,8 +316,11 @@ void prgrm(int menu) {
     while(pedButtons < buttons){
       time = (millis() - tStart) / 1000;
       lcd.setCursor(6, 0);
-      lcd.print(time, 1);
-      lcd.print("0");
+      lcd.print(getMin(time));
+      lcd.print(":");
+      lcd.print(getSec(time));
+      lcd.print(".");
+      lcd.print(getMil(time));
       lcd.setCursor(6,1);
       lcd.print(buttons-pedButtons);
       if (digitalRead(buttonMain) == LOW || actived[0] == 1){
@@ -314,8 +338,6 @@ void prgrm(int menu) {
       
 
     }
-    lcd.setCursor(6, 0);
-    lcd.print(time, 2);
     lcd.setCursor(6,1);
     lcd.print("Completed!");
     bPress(true);
