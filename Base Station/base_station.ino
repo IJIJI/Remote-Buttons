@@ -233,9 +233,6 @@ int getMin(float sec){
   int sec2 = sec;
   int mins;
   mins = round((sec2 / 60));
-  // if (sec2 % 60 >= 0.5 && mins > 1){
-  //   mins = mins - 1;
-  // }
   return mins;
 }
 int secTime() {
@@ -316,9 +313,9 @@ void prgrm(int menu) {
     while(pedButtons < buttons){
       time = (millis() - tStart) / 1000;
       lcd.setCursor(6, 0);
-      lcd.print(getMin(time));
+      lcdDigitPrint(getMin(time), 2);
       lcd.print(":");
-      lcd.print(getSec(time));
+      lcdDigitPrint(getSec(time), 2);
       lcd.print(".");
       lcd.print(getMil(time));
       lcd.setCursor(6,1);
