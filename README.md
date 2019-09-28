@@ -11,6 +11,7 @@
 * Fix time set so that all the digits update.
 * Make a PCB.
   * Design it.
+  * ADD PULLDOWN RESISTORS.
   * Check current delivery wireless chip.
   * Get an overdischarge ic.
   * Order it.
