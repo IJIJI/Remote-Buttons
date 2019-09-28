@@ -7,6 +7,7 @@
 * Add wireless connectivity.
   * Complete the pairing menu.
 * Add a dedicated settings menu.
+* Add Classes.
 * Fix time set so that all the digits update.
 * Make a PCB.
   * Design it.
