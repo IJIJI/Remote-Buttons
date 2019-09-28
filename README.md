@@ -10,6 +10,8 @@
 * Fix time set so that all the digits update.
 * Make a PCB.
   1. Design it.
+    * Check current delivery wireless chip.
+    * Get an overdischarge ic.
   2. Order it.
 
 
