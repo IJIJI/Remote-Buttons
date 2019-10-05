@@ -16,3 +16,7 @@
 * Change the name. (TimeStep?)
 
 
+## thoughts
+* SMD instead of THT components?
+* I2C Pullup necesary?
+* Add a (esp8266) wifi chip?
