@@ -15,7 +15,7 @@
 * Add a description.
 * Change the name. (TimeStep?)
 * Add interrupts.
-
+* Replace shotky diode.
 
 ## thoughts
 * SMD instead of THT components?

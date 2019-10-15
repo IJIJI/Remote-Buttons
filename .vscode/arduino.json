@@ -1,7 +1,7 @@
 {
     "programmer": "AVRISP mkII",
     "board": "arduino:avr:nano",
-    "port": "COM5",
+    "port": "COM9",
     "sketch": "Base Station\\base_station.ino",
     "configuration": "cpu=atmega328old"
 }
