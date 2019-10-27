@@ -15,7 +15,7 @@ RTC_DS3231 rtc;
 
 const char modes[10][11] = {"Timed", "Re-end", "Quiz", "Button Set","Time Set", "Pairing", "7", "8", "9", "10"};
 
-
+#define buzzer
 #define buttonUp 3
 #define buttonDown 4
 #define buttonMain 5
@@ -210,12 +210,13 @@ void lcdDigitPrint(int inVar, int digits){
 }
 void bPress(int sCheck){
   if (sCheck == true){
-    while(digitalRead(buttonMain) == LOW){delay(1);}
-    while(digitalRead(buttonMain) != LOW){delay(1);}
+    while(digitalRead(buttonMain) == LOW){delay(5);}
+    while(digitalRead(buttonMain) != LOW){delay(5);}
   }
   digitalWrite(ledMain, HIGH);
-  while (digitalRead(buttonMain) == LOW){delay(1);}
+  while (digitalRead(buttonMain) == LOW){delay(5);}
   digitalWrite(ledMain, LOW);
+  // delay(20);
 }
 
 int getMil(float sec){
