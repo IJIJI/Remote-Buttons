@@ -8,16 +8,19 @@
   * Complete the pairing menu.
 * Add a dedicated settings menu.
 * Add Classes.
-* Fix time set so that all the digits update.
-* Make a PCB.
-  * Check to workings of the current over discharge ic.
-  * Order it.
 * Add a description.
-* Change the name. (TimeStep?)
-* Add interrupts.
-* Replace shotky diode.
+* Add a lapped mode.
 
-## thoughts
-* SMD instead of THT components?
-* I2C Pullup necesary?
+### Fixes
+* Fix time set so that all the digits update.
+* Fix double press problem
+* Fix freezing issue.
+* Split into multuple files.
+  * Fix Combined branch.
+  * Merge Combined branch.
+
+
+### thoughts
 * Add a (esp8266) wifi chip?
+* Add interrupts?
+
