@@ -16,10 +16,10 @@ RTC_DS3231 rtc;
 const char modes[10][11] = {"Timed", "Re-end", "Quiz", "Button Set","Time Set", "Pairing", "7", "8", "9", "10"};
 
 
-#define buttonUp 2
-#define buttonDown 3
-#define buttonMain 4
-#define ledMain 5
+#define buttonUp 3
+#define buttonDown 4
+#define buttonMain 5
+#define ledMain 6
 
 int buttons = 1; // default terminals + base stations
 
@@ -34,7 +34,7 @@ int buttons = 1; // default terminals + base stations
 #define setUpAdress 6 // this is how the firmware knows if it has been set up for the first time
 #define adress1 7 // Here the button amount is stored
 
-const int EEPid[6] {99, 240, 129, 92, 7, 9};
+const int EEPid[6] {100, 240, 129, 92, 7, 9};
 const int setUpId = 98;
 const int PairCode[buttonMax] {101, 102, 103, 104, 105, 106, 107, 108, 109, 110};
 const int trigCode[buttonMax] {151, 152, 153, 154, 155, 156, 157, 158, 159, 160};
@@ -86,7 +86,7 @@ void setup()
     lcd.setCursor(x + 1,1);
     lcd.print("=");
     delay(70); 
-  }  
+  }
   lcd.clear(); //Clear the LCD
   digitalWrite(ledMain, LOW);
   if (firstStart == true || EEPROM.read(setUpAdress) != setUpId){
