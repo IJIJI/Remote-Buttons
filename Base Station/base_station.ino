@@ -13,7 +13,7 @@ System without display uses about 41ma.
 LiquidCrystal_I2C lcd(0x27,16,2);  // set the LCD address to 0x27 for a 16 chars and 2 line display
 RTC_DS3231 rtc;
 
-const char modes[10][11] = {"Timed", "Re-end", "Quiz", "Button Set","Time Set", "Pairing", "7", "8", "9", "10"};
+const char modes[10][11] = {"Timed", "Re-end", "Lapped", "Quiz", "Button Set","Time Set", "Pairing", "7", "8", "9", "10"};
 
 #define buzzer
 #define buttonUp 3
@@ -24,7 +24,7 @@ const char modes[10][11] = {"Timed", "Re-end", "Quiz", "Button Set","Time Set", 
 int buttons = 1; // default terminals + base stations
 
 //#define menuLoop
-#define menuMax 6
+#define menuMax 7
 #define menuMin 1
 
 #define buttonMax 10
@@ -345,6 +345,9 @@ void prgrm(int menu) {
 
   }
   else if (menu == 3){
+    
+  }
+  else if (menu == 4){
     int bPressd = 999;
     lcd.clear();
     lcd.setCursor(6,0);
@@ -354,7 +357,7 @@ void prgrm(int menu) {
     bPress(true);
 
   }
-  else if (menu == 4){
+  else if (menu == 5){
 
     int cButtons = 99;
     lcd.clear();
@@ -386,7 +389,7 @@ void prgrm(int menu) {
     lastActTime = secTime();
     bPress(false);
   }
-  else if(menu == 5){
+  else if(menu == 6){
 
     int cTimeEdit = 0;
     char tOffset[3] = {0, 0, 0};
@@ -430,7 +433,7 @@ void prgrm(int menu) {
 
 
   }
-  else if (menu == 6){
+  else if (menu == 7){
     while (digitalRead(buttonMain) == LOW){delay(1);}
     lcd.clear();
     lcd.setCursor(0,0);
