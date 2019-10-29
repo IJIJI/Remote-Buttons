@@ -13,7 +13,7 @@ System without display uses about 41ma.
 LiquidCrystal_I2C lcd(0x27,16,2);  // set the LCD address to 0x27 for a 16 chars and 2 line display
 RTC_DS3231 rtc;
 
-const char modes[10][11] = {"Timed", "Re-end", "Lapped", "Quiz", "Button Set","Time Set", "Pairing", "7", "8", "9", "10"};
+const char modes[10][11] = {"Timed", "Re-end", "Lapped", "Quiz", "PowerPoint", "Button Set","Time Set", "Pairing", "9", "10"};
 
 #define buzzer
 #define buttonUp 3
@@ -345,7 +345,78 @@ void prgrm(int menu) {
 
   }
   else if (menu == 3){
+    float tStart;
+    float time;
+    double lapTime[] = {};
+    int laps = 0;
+
+    int tMenu = 0;
+    int CtMenu = 99;
+
+    lcd.clear();
+    lcd.setCursor(0,0);
+    lcd.print("Time:");
+    lcd.setCursor(1,1);
+    lcd.print("Press to start");
+    while(digitalRead(buttonMain) != LOW){delay(5);}
+    digitalWrite(ledMain, HIGH);
+    while(digitalRead(buttonMain) == LOW){delay(5);}
+    lcd.clear();
+    lcd.setCursor(0,0);
+    lcd.print("Time:");
+    lcd.setCursor(0,1);
+    lcd.print("Laps:");
+    tStart = millis();
+    while(digitalRead(buttonUp) == HIGH && digitalRead(buttonDown) == HIGH){
+      time = (millis() - tStart) / 1000;
+      lcd.setCursor(6, 0);
+      lcdDigitPrint(getMin(time), 2);
+      lcd.print(":");
+      lcdDigitPrint(getSec(time), 2);
+      lcd.print(".");
+      lcd.print(getMil(time));
+      lcd.setCursor(6,1);
+      lcd.print(laps);
+      if (digitalRead(buttonMain) == LOW /* || Radio signal == active */){
+        lapTime[laps] = time;
+        laps++; 
+      }
+
+    }
     
+    while (digitalRead(buttonMain) == HIGH){
+      
+      if (digitalRead(buttonUp) == LOW && cMenu < laps - 1){
+        cMenu++;
+      }
+      if (digitalRead(buttonDown) == LOW && cMenu > 0){
+        cMenu--;
+      }
+    
+      if (tMenu != CtMenu){  
+        CtMenu = tMenu;
+        lcd.setCursor(0,0);
+        lcd.print(tMenu);
+        lcd.print(": ");
+        lcdDigitPrint(getMin(lapTime[tMenu]), 2);
+        lcd.print(":");
+        lcdDigitPrint(getSec(lapTime[tMenu]), 2);
+        lcd.print(".");
+        lcd.print(getMil(lapTime[tMenu]));
+        
+        lcd.setCursor(0,1);
+        lcd.print(tMenu + 1);
+        lcd.print(": ");
+        lcdDigitPrint(getMin(lapTime[tMenu + 1]), 2);
+        lcd.print(":");
+        lcdDigitPrint(getSec(lapTime[tMenu + 1]), 2);
+        lcd.print(".");
+        lcd.print(getMil(lapTime[tMenu + 1]));
+      
+      }
+
+    }
+    bPress(false);
   }
   else if (menu == 4){
     int bPressd = 999;
@@ -355,9 +426,9 @@ void prgrm(int menu) {
     lcd.setCursor(1,1);
     lcd.print("Press To Start");
     bPress(true);
-
+    
   }
-  else if (menu == 5){
+  else if (menu == 6){
 
     int cButtons = 99;
     lcd.clear();
@@ -389,7 +460,7 @@ void prgrm(int menu) {
     lastActTime = secTime();
     bPress(false);
   }
-  else if(menu == 6){
+  else if(menu == 7){
 
     int cTimeEdit = 0;
     char tOffset[3] = {0, 0, 0};
