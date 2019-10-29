@@ -11,7 +11,8 @@
 * Add Classes.
 * Add a description.
 * Add a lapped mode.
-* Add lapptimes t the timed and re-end modes
+* Add lapptimes t the timed and re-end modes.
+* Change the buttonpressen in the timed modes to the bPress function.
 
 ### Fixes
 * Fix time set so that all the digits update.
