@@ -5,16 +5,18 @@
 #include "RTClib.h"
 
 /*
+* Not Up to date.
 System with display on uses about 56ma.
-
 System without display uses about 41ma.
 */
 
 LiquidCrystal_I2C lcd(0x27,16,2);  // set the LCD address to 0x27 for a 16 chars and 2 line display
 RTC_DS3231 rtc;
 
+//Modes
 const char modes[10][11] = {"Timed", "Re-end", "Lapped", "Quiz", "PowerPoint", "Button Set","Time Set", "Pairing", "9", "10"};
 
+// Pinouts
 #define buzzer
 #define buttonUp 3
 #define buttonDown 4
@@ -27,6 +29,7 @@ int buttons = 1; // default terminals + base stations
 #define menuMax 7
 #define menuMin 1
 
+//The button max limit, increasing this higher than necessary may increase scan times.
 #define buttonMax 10
 
 #define screenTimeOut 1
@@ -34,11 +37,14 @@ int buttons = 1; // default terminals + base stations
 #define setUpAdress 6 // this is how the firmware knows if it has been set up for the first time
 #define adress1 7 // Here the button amount is stored
 
-const int EEPid[6] {100, 240, 129, 92, 7, 9};
-const int setUpId = 98;
+const int EEPid[6] {100, 240, 129, 92, 7, 9}; // This is the code for the firmware to recognize if it has been started before.
+const int setUpId = 98;  //This is the code for the firmware to recognize if it has been setup.
+//Communication codes.
 const int PairCode[buttonMax] {101, 102, 103, 104, 105, 106, 107, 108, 109, 110};
 const int trigCode[buttonMax] {151, 152, 153, 154, 155, 156, 157, 158, 159, 160};
 
+
+// Do not check below if you don't know what you are doing.
 int Menu = 1;
 int cMenu = 0;
 int cHour = 99;
@@ -66,14 +72,14 @@ void setup()
 
   // Print an initialization message to the LCD.
   lcd.init();  // initialize the lcd. 
-  lcd.backlight();
-  digitalWrite(ledMain, HIGH);
-  bool DispOn = true;
-  lastActTime = secTime();
+  lcd.backlight(); //Turn on the backlight
+  bool DispOn = true; //Let the system know that the display is on.
+  lastActTime = secTime(); //Set the last active time to the current time.
+  digitalWrite(ledMain, HIGH); //Turn on ledMain for setup.
   lcd.setCursor(2,0);
   lcd.print("initializing");
 
-  if (EEPROMcheck() == false){
+  if (EEPROMcheck() == false){ // CHeck if the firmware has been started before.
     lcd.print("*");
     firstStart = true;
   }
@@ -88,8 +94,8 @@ void setup()
     delay(70); 
   }
   lcd.clear(); //Clear the LCD
-  digitalWrite(ledMain, LOW);
-  if (firstStart == true || EEPROM.read(setUpAdress) != setUpId){
+  digitalWrite(ledMain, LOW); // Turn off the button ledMain
+  if (firstStart == true || EEPROM.read(setUpAdress) != setUpId){ // First time setup.
     prgrm(5);
     prgrm(4);
     if (buttons > 1){
@@ -103,33 +109,33 @@ void setup()
 void loop()
 {
   DateTime now = rtc.now(); //define rtc.now
-  if (digitalRead(buttonMain) == LOW && DispOn == true){
+  if (digitalRead(buttonMain) == LOW && DispOn == true){ // check if buttonMain is pressed.
     bPress(false);
     prgrm(Menu);
   }
-  if (digitalRead(buttonUp) == LOW && DispOn == true){ //check if the up button is pressed
+  if (digitalRead(buttonUp) == LOW && DispOn == true){ //check if the buttonUp is pressed
     Menu = Menu + 1;
     while (digitalRead(buttonUp) == LOW){delay(1);}
   }
-  if (digitalRead(buttonDown) == LOW && DispOn == true){ //check if the down button is pressed
+  if (digitalRead(buttonDown) == LOW && DispOn == true){ //check if the buttonDown is pressed
     Menu = Menu - 1;
     while (digitalRead(buttonDown) == LOW){delay(1);}
   }
-  if(Menu > menuMax){
+  if(Menu > menuMax){ // CHeck if the menu is over the max.
     #ifdef menuLoop
     Menu = menuMin;
     #else
     Menu = menuMax;
     #endif
   }
-  if(Menu < menuMin){
+  if(Menu < menuMin){ //check if the menu is under the min
     #ifdef menuLoop
     Menu = menuMax;
     #else
     Menu = menuMin;
     #endif
   }
-  #ifdef screenTimeOut
+  #ifdef screenTimeOut // Manages the backlight.
   if (digitalRead(buttonDown) == LOW || digitalRead(buttonUp) == LOW || digitalRead(buttonMain) == LOW){
     lastActTime = secTime();
     
@@ -188,7 +194,7 @@ void loop()
 }
 
 
-void lcdDigitPrint(int inVar, int digits){
+void lcdDigitPrint(int inVar, int digits){ // A function that prints a variable to the lcd with a fixed digit count.
   int zeros;
   if (inVar < int(pow(10, digits - 1))){
     for(int x = 1; x < digits; x++){
@@ -208,7 +214,7 @@ void lcdDigitPrint(int inVar, int digits){
     lcd.print(inVar);
   }
 }
-void bPress(int sCheck){
+void bPress(int sCheck){ //Wait for when button is released + ledMain
   if (sCheck == true){
     while(digitalRead(buttonMain) == LOW){delay(5);}
     while(digitalRead(buttonMain) != LOW){delay(5);}
@@ -219,30 +225,30 @@ void bPress(int sCheck){
   // delay(20);
 }
 
-int getMil(float sec){
+int getMil(float sec){ // Converts inputted seconds to minutes and seconds and returns the remainder.
   int sec2 = sec * 100;
   sec = sec2 % 100;
   return abs(sec);
 }
-int getSec(float sec){
+int getSec(float sec){ // Converts inputted seconds to miliseconds, seconds and minutes and returns seconds.
   int sec2 = sec;
   sec = sec2 % 60;
   return sec;
 
 }
-int getMin(float sec){
+int getMin(float sec){ // Converts inputted seconds to miliseconds seconds and minutes and returns minutes.
   int sec2 = sec;
   int mins;
   mins = round((sec2 / 60));
   return mins;
 }
-int secTime() {
+int secTime() { // gets the current time in seconds (mith a descimal)
   DateTime now = rtc.now();
   int secTime;
   secTime = now.second() + now.minute() * 60 + now.hour() * 60 * 60;
   return secTime;
 }
-int timeDiv(int x){
+int timeDiv(int x){ //gets the time depending on the number.
   DateTime now = rtc.now();
   int result;
   if (x == 0){
@@ -257,7 +263,7 @@ int timeDiv(int x){
   return result;
 
 }
-int EEPROMcheck(){
+int EEPROMcheck(){ // compares the eeprom for the EEPid's and returns false if unfamiliar and rewrites the eeprom to EEPid.
   bool familiar = true;
   for(int x = 0; x < 6; x++){
     if (EEPROM.read(x) != EEPid[x]){
@@ -281,9 +287,9 @@ int EEPROMcheck(){
 
 
 
-//VV should be moved to seperate files
+//TODO VV should be moved to seperate files
 
-void prgrm(int menu) {
+void prgrm(int menu) { // these are the different programs found in the menu.
   DateTime now = rtc.now();
   
   if (menu == 1 || menu == 2)
