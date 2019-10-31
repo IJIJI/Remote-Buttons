@@ -4,7 +4,7 @@
 
 ## TO DO
 
-* ADD COMMENTS IN THE CODE!
+* Complete adding comments in the code.
 * Add wireless connectivity.
   * Complete the pairing menu.
 * Add a dedicated settings menu.
