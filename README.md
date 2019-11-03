@@ -1,8 +1,8 @@
 # TimeStep V0.5
  Timestep V0.5 is the alpha version of the TimeStep hardware platform. 
 
-[<img src="img\Timestep.png" alt="TimeStep V1" style="border-radius:20px; width:40%; margin-left:5%; margin-right:4%; box-shadow: 7px 7px 10px grey">](https://github.com/IJIJI/TimeStep/blob/master/img/Timestep.png)
-[<img src="img\Timestep2.jpg" alt="TimeStep V1" style="border-radius:20px; width:40%; margin-left:4%; margin-right:5%; box-shadow: 7px 7px 10px grey">](https://github.com/IJIJI/TimeStep/blob/master/img/Timestep2.jpg)
+<img src="img\Timestep.png" alt="TimeStep V1" style="border-radius:20px; width:40%; margin-left:5%; margin-right:4%; box-shadow: 7px 7px 10px grey;">
+<img src="img\Timestep2.jpg" alt="TimeStep V1" style="border-radius:20px; width:40%; margin-left:4%; margin-right:5%; box-shadow: 7px 7px 10px grey;">
 
 
 ## TO DO
