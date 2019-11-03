@@ -1,17 +1,21 @@
 # Remote Buttons
  A wireless button system.
 
+<img href="img\Timestep.png" title="TimeStep V1" style="padding:5px">
+
 
 ## TO DO
+* Implement the battery sensor.
+* Add a dedicated settings menu.
+* Add Classes.
+* Add a lapped mode.
+* Add lapptimes to the timed and re-end modes.
 
+##### **Prepare for** ***V1.0***
+* Add a description.
 * Complete adding comments in the code.
 * Add wireless connectivity.
   * Complete the pairing menu.
-* Add a dedicated settings menu.
-* Add Classes.
-* Add a description.
-* Add a lapped mode.
-* Add lapptimes t the timed and re-end modes.
 * Change the buttonpressen in the timed modes to the bPress function.
 
 ### Fixes
