@@ -15,5 +15,38 @@
         "https://raw.githubusercontent.com/VSChina/azureiotdevkit_tools/master/package_azureboard_index.json",
         "http://arduino.esp8266.com/stable/package_esp8266com_index.json"
     ],
-    "arduino.defaultBaudRate": 96000
+    "arduino.defaultBaudRate": 96000,
+    "better-comments.tags": [
+        {
+          "tag": "!",
+          "color": "#FF2D00",
+          "strikethrough": false,
+          "backgroundColor": "transparent"
+        },
+        {
+          "tag": "?",
+          "color": "#3498DB",
+          "strikethrough": false,
+          "backgroundColor": "transparent"
+        },
+        {
+          "tag": "//",
+          "color": "#474747",
+          "strikethrough": true,
+          "backgroundColor": "transparent"
+        },
+        {
+          "tag": "todo",
+          "color": "#FF8C00",
+          "strikethrough": false,
+          "backgroundColor": "transparent"
+        },
+        {
+          "tag": "*",
+          "color": "#98C379",
+          "strikethrough": false,
+          "backgroundColor": "transparent"
+        }
+      ]
+    
 }
