@@ -10,6 +10,7 @@
 * Add a dedicated settings menu.
 * Add Classes.
 * Add a lapped mode.
+* Add a chess mode.
 * Add lapptimes to the timed and re-end modes.
 * Fix images in readme.md
 
